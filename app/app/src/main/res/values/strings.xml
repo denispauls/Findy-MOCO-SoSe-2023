@@ -1,0 +1,20 @@
+<resources>
+
+        <string name="app_name">FindY</string>
+        <string name="action_settings">Settings</string>
+        <!-- Strings used for fragments for navigation -->
+        <string name="first_fragment_label">First Fragment</string>
+        <string name="second_fragment_label">Second Fragment</string>
+        <string name="next">Next</string>
+        <string name="previous">Previous</string>
+
+
+        <string name="confirm_identity">Confirm Identity</string>
+        <string name="forgot_password">forgot password?</string>
+        <string name="username_phone_number">Username/Phone Number</string>
+        <string name="login">Login</string>
+        <string name="findy">FindY</string>
+        <string name="password">Password</string>
+        <string name="finger_print_icon">Finger Print Icon</string>
+
+</resources>
