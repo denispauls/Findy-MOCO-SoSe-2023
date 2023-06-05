@@ -1,10 +1,15 @@
 package com.example.FindY
 
 import android.content.ClipData.Item
+import android.hardware.biometrics.BiometricManager
+import android.location.Location
 import android.os.Bundle
 import android.view.RoundedCorner
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +35,9 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -40,14 +48,24 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MovableContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
@@ -55,157 +73,52 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.modifier.modifierLocalMapOf
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.textInputServiceFactory
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.findy_c.ui.theme.FindY_CTheme
+import com.example.findy_c.ui.theme.NavigationTheme
+import com.example.findy_c.ui.theme.SetupNavGraph
 import kotlinx.coroutines.awaitAll
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
-            Login()
-        }
-    }
-}
-@Composable
-fun Login() {
-    Column {
-        Column(modifier = Modifier
-            .padding(8.dp)) {
-            Box (Modifier.size(300.dp))
-            Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
-                Text(
-                    text ="FindY",
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 80.sp,
-                    color = Color.Black,
-                    modifier = Modifier.wrapContentSize(align = Alignment.TopCenter)
-                )
-            }
-            Spacer(modifier = Modifier.size(80.dp))
-            Text(
-                text = "Username/Password",
-                style = MaterialTheme.typography.bodyMedium,
-                fontSize = 20.sp,
-                color = Color.Black
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.extraSmall,
-                colors = ButtonDefaults.buttonColors(
-                    MaterialTheme.colorScheme.onBackground)
-            ){
-                Row {
-                    Text(
-                        "Username/Phonenumber",
-                        textAlign = TextAlign.Left  // horizontal center of the text
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = "Password",
-                style = MaterialTheme.typography.bodyMedium,
-                fontSize = 20.sp,
-                color = Color.Black
-            )
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.extraSmall,
-                colors = ButtonDefaults.buttonColors(
-                    MaterialTheme.colorScheme.onSurface)
-            ){
-                Row {
-                    Text(
-                        "Password"            )}
-            }
-        }
-
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
-            .wrapContentSize(align = Alignment.BottomCenter)) {
-
-            Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.extraSmall,
-                colors = ButtonDefaults.buttonColors(
-                    MaterialTheme.colorScheme.onSurface
-                )
-            ) {
-                Text(text = "Sign In")
-            }
-            Row (modifier = Modifier.align(Alignment.CenterHorizontally)){
-                Text(text = "Forgot Password?",
-                    modifier = Modifier.wrapContentSize(align = Alignment.Center),
-                    color = Color.DarkGray
-                )
+            FindY_CTheme {
+                navController = rememberNavController()
+                SetupNavGraph(navController = navController)
             }
         }
     }
 }
-@Composable
-fun ProfileCard() {
-    Card(
-        shape = RoundedCornerShape(4.dp),
-        colors = CardDefaults.cardColors(Color.Gray),
-        border = BorderStroke(1.dp, color = Color.Black),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp)
-    ) {
-        Row {
-            Icon(
-                Icons.Rounded.AccountCircle,
-                contentDescription = null,
-                modifier = Modifier.size(60.dp)
-            )
-            Column(Modifier.padding(6.dp)) {
-                Text(
-                    text = "Name Surname",
-                    fontSize = 18.sp
-                )
-                Text(
-                    text = "Bio/Last online",
-                    fontSize = 14.sp
-                )
-            }
-        }
-    }
-}
-@Composable
-fun FriendsScreen(){
-    Surface(color = Color.Gray,
-        modifier = Modifier.verticalScroll(rememberScrollState())) {
-        }
-
-Box(Modifier.padding(top = 6.dp, start = 6.dp, end = 6.dp)){
-    LazyColumn(
-        Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(6.dp))
-    {
-        items(16){ProfileCard()
-        }
-    }
-    Icon(Icons.Rounded.MoreVert, null,
-        Modifier
-        .size(35.dp)
-        .align(Alignment.TopEnd))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Preview(){
-    FriendsScreen()
-    //ProfileCard()
-    //Login()
-}
+//@Composable
+//fun NavigationView() {
+//    val navController = rememberNavController()
+//    NavHost(navController = navController, startDestination = "home") {
+//        composable("home") {
+//            //Login( onItemClick = {navController.navigate("friends")})
+//
+//        }
+//        composable("friends") {
+//            //FriendsScreen(
+//            //    onHome = { navController.popBackStack() })
+//
+//        }
+//
+//    }
+//}

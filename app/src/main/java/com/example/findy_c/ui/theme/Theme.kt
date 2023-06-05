@@ -1,9 +1,13 @@
 package com.example.findy_c.ui.theme
 
+
+import androidx.compose.foundation.isSystemInDarkTheme
+
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -65,6 +69,33 @@ fun FindY_CTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        content = content
+    )
+}
+
+
+
+    /* Other default colors to override
+    background = Color.White,
+    surface = Color.White,
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+    */
+
+@Composable
+fun NavigationTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+    val colors = if (darkTheme) {
+        DarkColorScheme
+    } else {
+       LightColorScheme
+    }
+
+    MaterialTheme(
+        colorScheme = colors,
+        typography = Typography,
+        shapes = shapes,
         content = content
     )
 }
