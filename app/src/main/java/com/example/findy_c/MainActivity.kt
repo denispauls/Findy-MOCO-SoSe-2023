@@ -89,7 +89,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.findy_c.ui.theme.FindY_CTheme
 import com.example.findy_c.ui.theme.NavigationTheme
-import com.example.findy_c.ui.theme.SetupNavGraph
+import com.example.findy_c.navigation.NavigationGraph
 import kotlinx.coroutines.awaitAll
 
 class MainActivity : ComponentActivity() {
@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             FindY_CTheme {
                 navController = rememberNavController()
-                SetupNavGraph(navController = navController)
+                NavigationGraph(navController)
             }
         }
     }

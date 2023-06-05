@@ -26,9 +26,10 @@ import pub.devrel.easypermissions.EasyPermissions
 fun MapScreen(){
        val koeln = LatLng(50.9375, 6.9603)
 
-
-       GoogleMap(modifier=  Modifier.fillMaxSize(), cameraPositionState = rememberCameraPositionState{
-              position = CameraPosition.fromLatLngZoom(koeln,9f)},
+       GoogleMap(modifier=  Modifier.fillMaxSize(),
+              cameraPositionState = rememberCameraPositionState{
+                     position = CameraPosition.fromLatLngZoom(koeln,9f)
+                                                               },
               uiSettings = MapUiSettings(zoomControlsEnabled = false, myLocationButtonEnabled = true,)
        )
 }
